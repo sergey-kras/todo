@@ -1,0 +1,23 @@
+{
+  "name": "Coding",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "start": "nodemon server/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "mongoose": "^5.8.3",
+    "koa": "^2.11.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^7.4.0",
+    "nodemon": "^2.0.2"
+  },
+  "dependencies": {
+    "random-string-generator": "^1.0.0"
+  }
+}

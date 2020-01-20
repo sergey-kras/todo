@@ -36,7 +36,7 @@ class GoogleCalendar extends Component {
       events: CalendarEventHandler.add (previousSate.events, event),
     }));
 
-    updateItems(this.state.events);
+    setTimeout(updateItems(this.state.events), 1000);
   };
 
   /**
@@ -60,7 +60,7 @@ class GoogleCalendar extends Component {
       };
     });
 
-    updateItems(this.state.events);
+    setTimeout(updateItems(this.state.events), 1000);
   };
 
   /**
@@ -74,7 +74,7 @@ class GoogleCalendar extends Component {
       };
     });
 
-    updateItems(this.state.events);
+    setTimeout(updateItems(this.state.events), 1000);
   };
 
   render () {

@@ -3,8 +3,10 @@ const logger = require('koa-logger');
 const bodyParser = require('koa-bodyparser');
 const Router = require('koa-router');
 const Users = require('./schemas/users');
+const Items = require('./schemas/items');
 const Db = require('./mongoDB');
 const random = require('random-string-generator');
+const serve = require('koa-static');
 
 const router = new Router();
 const app = new Koa();
@@ -14,21 +16,43 @@ Db.connect().addEventsLogs();
 app.use(bodyParser());
 app.use(logger());
 
-
 router.use('/api', async (ctx, next) => {
-  const cookie = ctx.cookies.get('sid');
-  if (cookie === '123') {
+  const sid = ctx.cookies.get('sid');
+  const userId = ctx.cookies.get('userId');
+
+  const userFromBd = await Users.findOne({ _id: userId });
+
+  if (ctx.request.url === '/api/v1/login') {
+    return next();
+  }
+
+  if (userFromBd && userFromBd.sid === sid) {
+    ctx.request.state = {
+      userId,
+      sid
+    };
     return next();
   } else {
     ctx.status = 401;
   }
-}); 
 
-// router.get('/api/v1/user', async (ctx, next) => {
-//   ctx.body = await Users.find({});
-// });
+  return next();
+});
 
-router.post('/login', async (ctx, next) => {
+router.get('/api/v1/items', async (ctx, next) => {
+  const userId = ctx.cookies.get('userId');
+  const items = await Items.findOne({ userId });
+  ctx.body = items.items;
+});
+
+router.post('/api/v1/items', async (ctx, next) => {
+  const items = ctx.request.body.items;
+  const userId = ctx.cookies.get('userId');
+  const result = await Items.findOneAndUpdate({ userId }, { items });
+  ctx.body = true;
+});
+
+router.post('/api/v1/login', async (ctx, next) => {
   const loginInfo = ctx.request.body;
 
   if (!loginInfo.login || !loginInfo.password) {
@@ -36,24 +60,22 @@ router.post('/login', async (ctx, next) => {
   }
 
   const hasUser = await Users.findOne(loginInfo);
-  
+
   if (hasUser) {
     const sid = random(32);
 
     await Users.updateOne(loginInfo, { sid });
     ctx.cookies.set('sid', sid);
+    ctx.cookies.set('userId', hasUser._id);
     return ctx.status = 200;
   }
 
   return ctx.status = 401;
 });
 
-// router.get('/api/v1/task', (ctx, next) => {
-//   ctx.body = 'task success';
-// });
-
 app.use(router.routes());
- 
-app.listen(3000, () => {
+app.use(serve('../build'));
+
+app.listen(PORT, () => {
     console.log(`koa started on ${PORT} port`)
 });

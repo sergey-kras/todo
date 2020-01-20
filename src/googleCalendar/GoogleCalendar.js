@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import WeekView from './weekView';
 import CalendarEventHandler from './calendarEventHandler';
+import { updateItems } from '../api';
 
 class GoogleCalendar extends Component {
   constructor (props) {
@@ -12,7 +13,8 @@ class GoogleCalendar extends Component {
 
     // saving data to the local storage
     window.addEventListener ('beforeunload', () => {
-      localStorage.setItem ('events', JSON.stringify (this.state.events));
+      const stringEvents = JSON.stringify(this.state.events);
+      localStorage.setItem('events', stringEvents);
     });
   }
 
@@ -33,6 +35,8 @@ class GoogleCalendar extends Component {
     this.setState (previousSate => ({
       events: CalendarEventHandler.add (previousSate.events, event),
     }));
+
+    updateItems(this.state.events);
   };
 
   /**
@@ -55,6 +59,8 @@ class GoogleCalendar extends Component {
         ),
       };
     });
+
+    updateItems(this.state.events);
   };
 
   /**
@@ -67,6 +73,8 @@ class GoogleCalendar extends Component {
         events: CalendarEventHandler.delete (eventId, previousState.events),
       };
     });
+
+    updateItems(this.state.events);
   };
 
   render () {

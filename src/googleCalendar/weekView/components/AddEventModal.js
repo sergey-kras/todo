@@ -4,7 +4,7 @@ import AddEvent from './AddEvent';
 
 class AddEventModal extends Component {
   state = {
-    title: '',
+    title: this.props.eventTitle || '',
   };
 
   /**
@@ -41,7 +41,7 @@ class AddEventModal extends Component {
         ]}
       >
         <AddEvent
-          title={this.props.eventTitle || title}
+          title={title}
           onTitleChange={this.handleTitleChange}
           start={this.props.eventStart}
           end={this.props.eventEnd}

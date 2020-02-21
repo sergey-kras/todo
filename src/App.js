@@ -5,12 +5,7 @@ import { getItems } from './api';
 
 async function checkAuth() {
   const items = await getItems();
-  if (items.status === 200) {
-    localStorage.setItem('events', JSON.stringify(items.data));
-    return true;
-  } else {
-    return false;
-  }
+  return items.status === 200;
 }
 
 function App (props) {

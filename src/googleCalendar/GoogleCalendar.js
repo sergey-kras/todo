@@ -8,7 +8,7 @@ class GoogleCalendar extends Component {
     super (props);
 
     this.state = {
-      events: JSON.parse (localStorage.getItem ('events')) || {},
+      events: {},
     };
 
     // saving data to the local storage

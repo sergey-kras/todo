@@ -36,6 +36,8 @@ export class Login extends Component {
     this.setState({ password: e.target.value });
   };
 
+  showError = () => <span className="login__error">Auth error</span>;
+
   render() {
     return (
       <Container component="main" maxWidth="xs" className="login">
@@ -83,6 +85,7 @@ export class Login extends Component {
               >
                 Sign In
               </Button>
+              { this.state.error && this.showError() }
             </div>
           </form>
         </div>

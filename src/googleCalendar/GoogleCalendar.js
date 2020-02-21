@@ -45,11 +45,11 @@ class GoogleCalendar extends Component {
       ...event,
       id: CalendarEventHandler.generateId (event),
     };
-    this.setState (previousSate => ({
-      events: CalendarEventHandler.add (previousSate.events, event),
-    }));
-
-    setTimeout(updateItems(this.state.events), 1000);
+    this.setState (previousSate => {
+      const events = CalendarEventHandler.add (previousSate.events, event);
+      updateItems(events);
+      return { events }
+    });
   };
 
   /**
@@ -64,16 +64,16 @@ class GoogleCalendar extends Component {
   */
   updateEvent = (eventId, updatedEvent) => {
     this.setState (previousState => {
-      return {
-        events: CalendarEventHandler.update (
-          eventId,
-          updatedEvent,
-          previousState.events
-        ),
-      };
-    });
+      const events = CalendarEventHandler.update (
+        eventId,
+        updatedEvent,
+        previousState.events
+      );
 
-    setTimeout(updateItems(this.state.events), 1000);
+      updateItems(events);
+
+      return { events };
+    });
   };
 
   /**
@@ -82,12 +82,12 @@ class GoogleCalendar extends Component {
   */
   deleteEvent = eventId => {
     this.setState (previousState => {
-      return {
-        events: CalendarEventHandler.delete (eventId, previousState.events),
-      };
-    });
+      const events = CalendarEventHandler.delete (eventId, previousState.events);
 
-    setTimeout(updateItems(this.state.events), 1000);
+      updateItems(this.state.events);
+
+      return { events };
+    });
   };
 
   render () {
